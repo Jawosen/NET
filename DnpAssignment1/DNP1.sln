@@ -6,6 +6,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryContracts", "Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Server\Entities\Entities.csproj", "{8F0E8866-1922-434E-99C7-3CDE41BB25FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InMemoryRepositories", "Server\InMemoryRepositories\InMemoryRepositories.csproj", "{620ECC32-970F-4216-91A8-9278199BB851}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserConsole", "Server\UserConsole\UserConsole.csproj", "{80378EE7-DDA6-43FA-9FCC-98A288969397}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,6 +18,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{0926D3FC-8E46-44AA-B683-F22B47A24BD5} = {5E344F2B-8741-40B7-8661-ACA15D83F7F9}
 		{8F0E8866-1922-434E-99C7-3CDE41BB25FC} = {5E344F2B-8741-40B7-8661-ACA15D83F7F9}
+		{620ECC32-970F-4216-91A8-9278199BB851} = {5E344F2B-8741-40B7-8661-ACA15D83F7F9}
+		{80378EE7-DDA6-43FA-9FCC-98A288969397} = {5E344F2B-8741-40B7-8661-ACA15D83F7F9}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0926D3FC-8E46-44AA-B683-F22B47A24BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -24,5 +30,13 @@ Global
 		{8F0E8866-1922-434E-99C7-3CDE41BB25FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F0E8866-1922-434E-99C7-3CDE41BB25FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F0E8866-1922-434E-99C7-3CDE41BB25FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{620ECC32-970F-4216-91A8-9278199BB851}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{620ECC32-970F-4216-91A8-9278199BB851}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{620ECC32-970F-4216-91A8-9278199BB851}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{620ECC32-970F-4216-91A8-9278199BB851}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80378EE7-DDA6-43FA-9FCC-98A288969397}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80378EE7-DDA6-43FA-9FCC-98A288969397}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80378EE7-DDA6-43FA-9FCC-98A288969397}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80378EE7-DDA6-43FA-9FCC-98A288969397}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

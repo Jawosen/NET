@@ -2,11 +2,11 @@ using Entities;
 
 namespace RepositoryContracts;
 
-public interface IComment
+public interface ICommentRepository
 {
     Task<Comment> AddAsync(Comment comment); 
     Task<Comment> UpdateAsync(Comment comment);
     Task DeleteAsync(int id);
-    Task<Comment>getSingleAsync(int id);
-    IQueryable<Comment> getManyAsync(); 
+    Task<Comment>GetSingleAsync(int id);
+    IQueryable<Comment> GetManyAsync(); 
 }

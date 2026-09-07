@@ -2,11 +2,11 @@ using Entities;
 
 namespace RepositoryContracts;
 
-public interface IForum
+public interface IForumRepository
 {
     Task<Forum> AddAsync(Forum forum); 
     Task<Forum> UpdateAsync(Forum forum);
     Task DeleteAsync(int id);
-    Task<Forum>getSingleAsync(int id);
-    IQueryable<Forum> getManyAsync(); 
+    Task<Forum>GetSingleAsync(int id);
+    IQueryable<Forum> GetManyAsync(); 
 }
