@@ -1,8 +1,9 @@
 using Entities;
+using RepositoryContracts;
 
 namespace InMemoryRepositories
 {
-    public class PostInMemoryRepository
+    public class PostInMemoryRepository : IPostRepository
     {
         private readonly List<Post> posts = new();
 
@@ -27,6 +28,8 @@ namespace InMemoryRepositories
             return Task.FromResult(post);
         }
 
+    
+
         public Task UpdateAsync(Post post)
         {
             Post? existingPost = posts.SingleOrDefault(p => p.Id == post.Id);
@@ -50,7 +53,9 @@ namespace InMemoryRepositories
             return Task.CompletedTask;
         }
 
-        public Task<Post> GetSingleAsynx(int postId)
+     
+
+        public Task<Post> GetSingleAsync(int postId)
         {
             Post ? postToGet = posts.SingleOrDefault(p => p.Id == postId);
             if (postToGet is null)

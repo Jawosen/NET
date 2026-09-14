@@ -8,4 +8,5 @@ public class Post
     public int Likes { get; set; }
     public int Dislikes { get; set; }
     public DateTime Created { get; set; }
+    public int UserId { get; set; }
 }
