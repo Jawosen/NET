@@ -8,5 +8,5 @@ public interface IForumRepository
     Task<Forum> UpdateAsync(Forum forum);
     Task DeleteAsync(int id);
     Task<Forum>GetSingleAsync(int id);
-    IQueryable<Forum> GetManyAsync(); 
+    IQueryable<Forum> GetMany(); 
 }

@@ -49,7 +49,7 @@ namespace InMemoryRepositories
             return Task.FromResult(forumToGet);
         }
 
-        public IQueryable<Forum> GetManyAsync()
+        public IQueryable<Forum> GetMany()
         {
             return forums.AsQueryable();
         }

@@ -67,7 +67,7 @@ namespace InMemoryRepositories
             return Task.FromResult(postToGet);
         }
 
-        public IQueryable<Post> GetManyAsync()
+        public IQueryable<Post> GetMany()
         {
             return posts.AsQueryable();
         }

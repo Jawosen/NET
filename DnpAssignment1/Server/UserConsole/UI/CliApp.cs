@@ -20,6 +20,7 @@ namespace UserConsole.UI
         // The method that Program.cs is trying to call
         public async Task StartAsync()
         {
+            Console.WriteLine(Path.GetFullPath("posts.json"));
             bool exit = false;
             while (!exit)
             {
@@ -122,7 +123,7 @@ namespace UserConsole.UI
             Console.WriteLine("\n--- Posts Overview ---");
     
             // Retrieve all posts from the repository
-            var posts = postRepository.GetManyAsync().ToList();
+            var posts = postRepository.GetMany().ToList();
 
             if (!posts.Any())
             {
@@ -152,7 +153,7 @@ namespace UserConsole.UI
                     Console.WriteLine("Comments:");
             
                     // Retrieve and filter comments for this specific post
-                    var comments = commentRepository.GetManyAsync().Where(c => c.PostId == postId).ToList();
+                    var comments = commentRepository.GetMany().Where(c => c.PostId == postId).ToList();
             
                     if (!comments.Any())
                     {
