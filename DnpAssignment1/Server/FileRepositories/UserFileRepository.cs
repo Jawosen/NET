@@ -15,8 +15,7 @@ public class UserFileRepository : IUserRepository
             File.WriteAllText(filePath, "[]");
         }
     }
-
-    public async Task<User> AddAsync(User user)
+public async Task<User> AddAsync(User user)
     {
         string usersAsJson = await File.ReadAllTextAsync(filePath);
         List<User> users = JsonSerializer.Deserialize<List<User>>(usersAsJson) ?? new List<User>();

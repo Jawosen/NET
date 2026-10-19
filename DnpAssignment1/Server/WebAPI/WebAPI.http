@@ -1,0 +1,12 @@
+@WebAPI_HostAddress = http://localhost:5077
+
+POST {{WebAPI_HostAddress}}/users
+Content-Type: application/json
+
+{
+  "userName": "alice",
+  "password": "1234"
+}
+
+###
+GET {{WebAPI_HostAddress}}/posts?title=hello
