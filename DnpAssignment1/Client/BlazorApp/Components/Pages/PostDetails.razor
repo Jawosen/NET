@@ -31,22 +31,28 @@ else
         </div>
     }
 
-    <div class="mt-3">
-        <textarea class="form-control" rows="3" placeholder="Write a comment..." @bind="newComment"></textarea>
-        <button class="btn btn-primary mt-2" @onclick="AddCommentAsync">Add comment</button>
-        @if (!string.IsNullOrEmpty(commentError))
-        {
-            <p class="text-danger mt-2">@commentError</p>
-        }
-    </div>
+    <AuthorizeView>
+        <Authorized>
+            <div class="mt-3">
+                <textarea class="form-control" rows="3" placeholder="Write a comment..." @bind="newComment"></textarea>
+                <button class="btn btn-primary mt-2" @onclick="AddCommentAsync">Add comment</button>
+                @if (!string.IsNullOrEmpty(commentError))
+                {
+                    <p class="text-danger mt-2">@commentError</p>
+                }
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <p class="mt-3"><a href="/login">Log in</a> to write a comment.</p>
+        </NotAuthorized>
+    </AuthorizeView>
 }
 
 @code {
     [Parameter] public int Id { get; set; }
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; } = null!;
 
-    // Hardcoded until login is added in the next assignment
-    private const int CurrentUserId = 1;
-
+    private int userId;
     private PostDto? post;
     private List<CommentDto> comments = new();
     private Dictionary<int, string> userNames = new();
@@ -56,6 +62,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if (claimsPrincipal.Identity is not null && claimsPrincipal.Identity.IsAuthenticated)
+        {
+            userId = int.Parse(claimsPrincipal.Claims.Single(c => c.Type == "Id").Value);
+        }
+
         try
         {
             post = await PostService.GetPostAsync(Id);
@@ -83,7 +96,7 @@ else
             CommentDto created = await CommentService.AddCommentAsync(new CreateCommentDto
             {
                 Body = newComment,
-                UserId = CurrentUserId,
+                UserId = userId,
                 PostId = Id
             });
             comments.Add(created);

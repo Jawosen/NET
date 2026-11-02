@@ -4,30 +4,49 @@
 
 <PageTitle>Create post</PageTitle>
 
-<h3>Create post</h3>
+<AuthorizeView>
+    <Authorized>
+        <h3>Create post</h3>
 
-<div class="mb-2">
-    <label>Title</label>
-    <input class="form-control" @bind="title" />
-</div>
-<div class="mb-2">
-    <label>Body</label>
-    <textarea class="form-control" rows="5" @bind="body"></textarea>
-</div>
-<button class="btn btn-primary" @onclick="CreateAsync">Create</button>
+        <div class="mb-2">
+            <label>Title</label>
+            <input class="form-control" @bind="title" />
+        </div>
+        <div class="mb-2">
+            <label>Body</label>
+            <textarea class="form-control" rows="5" @bind="body"></textarea>
+        </div>
+        <button class="btn btn-primary" @onclick="CreateAsync">Create</button>
 
-@if (!string.IsNullOrEmpty(message))
-{
-    <p class="mt-2 text-danger">@message</p>
-}
+        @if (!string.IsNullOrEmpty(message))
+        {
+            <p class="mt-2 text-danger">@message</p>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <img width="600" src="https://i.kym-cdn.com/entries/icons/original/000/002/144/You_Shall_Not_Pass!_0-1_screenshot.jpg"/>
+        <p>You'll have to <a href="/login">log in</a>!</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
-    // Hardcoded until login is added in the next assignment
-    private const int CurrentUserId = 1;
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; } = null!;
 
+    private int userId;
     private string title = "";
     private string body = "";
     private string message = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+        {
+            return;
+        }
+        userId = int.Parse(claimsPrincipal.Claims.Single(c => c.Type == "Id").Value);
+    }
 
     private async Task CreateAsync()
     {
@@ -44,7 +63,7 @@
             {
                 Title = title,
                 Body = body,
-                UserId = CurrentUserId
+                UserId = userId
             });
             Navigation.NavigateTo($"/posts/{created.Id}");
         }
