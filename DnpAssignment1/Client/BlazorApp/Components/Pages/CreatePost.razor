@@ -24,8 +24,12 @@
         }
     </Authorized>
     <NotAuthorized>
-        <img width="600" src="https://i.kym-cdn.com/entries/icons/original/000/002/144/You_Shall_Not_Pass!_0-1_screenshot.jpg"/>
-        <p>You'll have to <a href="/login">log in</a>!</p>
+        <div class="alert alert-warning">
+            <h4 class="alert-heading">You need to log in</h4>
+            <p>You have to be logged in to see this page.</p>
+            <a class="btn btn-primary" href="/login">Log in</a>
+            <a class="btn btn-link" href="/users/create">Create an account</a>
+        </div>
     </NotAuthorized>
 </AuthorizeView>
 
