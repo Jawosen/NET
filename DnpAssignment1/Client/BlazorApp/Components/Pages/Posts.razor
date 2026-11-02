@@ -1,0 +1,55 @@
+@page "/posts"
+@inject IPostService PostService
+@inject IUserService UserService
+
+<PageTitle>Posts</PageTitle>
+
+<h3>Posts</h3>
+
+@if (error is not null)
+{
+    <p class="text-danger">@error</p>
+}
+else if (posts is null)
+{
+    <p>Loading...</p>
+}
+else if (posts.Count == 0)
+{
+    <p>No posts yet. <a href="/posts/create">Create one</a>.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (PostDto post in posts)
+        {
+            <li class="list-group-item">
+                <a href="/posts/@post.Id">@post.Title</a>
+                <small class="text-muted"> by @AuthorName(post.UserId)</small>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    private List<PostDto>? posts;
+    private Dictionary<int, string> userNames = new();
+    private string? error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            posts = await PostService.GetPostsAsync();
+            List<UserDto> users = await UserService.GetUsersAsync();
+            userNames = users.ToDictionary(u => u.Id, u => u.UserName);
+        }
+        catch (Exception e)
+        {
+            error = e.Message;
+        }
+    }
+
+    private string AuthorName(int userId) =>
+        userNames.TryGetValue(userId, out string? name) ? name : "unknown";
+}

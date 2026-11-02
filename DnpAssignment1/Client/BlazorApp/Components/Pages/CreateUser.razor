@@ -1,0 +1,58 @@
+@page "/users/create"
+@inject IUserService UserService
+
+<PageTitle>Create user</PageTitle>
+
+<h3>Create user</h3>
+
+<div class="mb-2">
+    <label>Username</label>
+    <input class="form-control" @bind="userName" />
+</div>
+<div class="mb-2">
+    <label>Password</label>
+    <input class="form-control" type="password" @bind="password" />
+</div>
+<div class="mb-2">
+    <label>Email</label>
+    <input class="form-control" @bind="email" />
+</div>
+<button class="btn btn-primary" @onclick="CreateAsync">Create</button>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <p class="mt-2">@message</p>
+}
+
+@code {
+    private string userName = "";
+    private string password = "";
+    private string email = "";
+    private string message = "";
+
+    private async Task CreateAsync()
+    {
+        message = "";
+        if (string.IsNullOrWhiteSpace(userName) || string.IsNullOrWhiteSpace(password))
+        {
+            message = "Username and password are required.";
+            return;
+        }
+
+        try
+        {
+            UserDto created = await UserService.AddUserAsync(new CreateUserDto
+            {
+                UserName = userName,
+                Password = password,
+                Email = email
+            });
+            message = $"User '{created.UserName}' created with id {created.Id}.";
+            userName = password = email = "";
+        }
+        catch (Exception e)
+        {
+            message = e.Message;
+        }
+    }
+}

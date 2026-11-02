@@ -1,0 +1,56 @@
+@page "/posts/create"
+@inject IPostService PostService
+@inject NavigationManager Navigation
+
+<PageTitle>Create post</PageTitle>
+
+<h3>Create post</h3>
+
+<div class="mb-2">
+    <label>Title</label>
+    <input class="form-control" @bind="title" />
+</div>
+<div class="mb-2">
+    <label>Body</label>
+    <textarea class="form-control" rows="5" @bind="body"></textarea>
+</div>
+<button class="btn btn-primary" @onclick="CreateAsync">Create</button>
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <p class="mt-2 text-danger">@message</p>
+}
+
+@code {
+    // Hardcoded until login is added in the next assignment
+    private const int CurrentUserId = 1;
+
+    private string title = "";
+    private string body = "";
+    private string message = "";
+
+    private async Task CreateAsync()
+    {
+        message = "";
+        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(body))
+        {
+            message = "Title and body are required.";
+            return;
+        }
+
+        try
+        {
+            PostDto created = await PostService.AddPostAsync(new CreatePostDto
+            {
+                Title = title,
+                Body = body,
+                UserId = CurrentUserId
+            });
+            Navigation.NavigateTo($"/posts/{created.Id}");
+        }
+        catch (Exception e)
+        {
+            message = e.Message;
+        }
+    }
+}

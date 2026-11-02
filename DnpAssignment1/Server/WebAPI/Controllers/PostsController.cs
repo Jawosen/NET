@@ -34,7 +34,8 @@ public class PostsController : ControllerBase
             {
                 Title = request.Title,
                 Body = request.Body,
-                UserId = request.UserId
+                UserId = request.UserId,
+                Created = DateTime.UtcNow
             };
 
             Post created = await postRepo.AddAsync(post);
