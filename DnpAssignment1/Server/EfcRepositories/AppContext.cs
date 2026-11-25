@@ -10,9 +10,7 @@ public class AppContext : DbContext
     public DbSet<Comment> Comments => Set<Comment>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        // Relative to the working directory. "../EfcRepositories/app.db" resolves to the same file
-        // whether you run from the EfcRepositories folder (dotnet ef) or the WebAPI folder (dotnet run).
+    { 
         optionsBuilder.UseSqlite("Data Source=../EfcRepositories/app.db");
     }
 
