@@ -1,6 +1,7 @@
 using ApiContracts;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -21,7 +22,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            if (userRepo.GetMany().Any(u => u.Username.Equals(request.UserName, StringComparison.OrdinalIgnoreCase)))
+            if (await userRepo.GetMany().AnyAsync(u => u.Username.ToLower() == request.UserName.ToLower()))
             {
                 return BadRequest($"Username '{request.UserName}' is already taken.");
             }
@@ -51,20 +52,18 @@ public class UsersController : ControllerBase
             User existing = await userRepo.GetSingleAsync(id);
 
             bool isChangingName = !existing.Username.Equals(request.UserName, StringComparison.OrdinalIgnoreCase);
-            if (isChangingName && userRepo.GetMany().Any(u => u.Username.Equals(request.UserName, StringComparison.OrdinalIgnoreCase)))
+            if (isChangingName && await userRepo.GetMany().AnyAsync(u => u.Username.ToLower() == request.UserName.ToLower()))
             {
                 return BadRequest($"Username '{request.UserName}' is already taken.");
             }
 
-            User user = new()
-            {
-                Id = id,
-                Username = request.UserName,
-                Password = request.Password,
-                Email = request.Email
-            };
+            // Update the already-tracked entity instead of creating a new one with the same Id
+            // (EFC refuses to track two instances with the same key).
+            existing.Username = request.UserName;
+            existing.Password = request.Password;
+            existing.Email = request.Email;
 
-            User updated = await userRepo.UpdateAsync(user);
+            User updated = await userRepo.UpdateAsync(existing);
             return Ok(ToDto(updated));
         }
         catch (Exception e)
@@ -90,7 +89,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<UserDto>> GetManyUsers([FromQuery] string? userName)
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetManyUsers([FromQuery] string? userName)
     {
         try
         {
@@ -98,10 +97,14 @@ public class UsersController : ControllerBase
 
             if (!string.IsNullOrWhiteSpace(userName))
             {
-                query = query.Where(u => u.Username.Contains(userName, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(u => u.Username.ToLower().Contains(userName.ToLower()));
             }
 
-            return Ok(query.Select(ToDto).ToList());
+            List<UserDto> users = await query
+                .Select(u => new UserDto { Id = u.Id, UserName = u.Username })
+                .ToListAsync();
+
+            return Ok(users);
         }
         catch (Exception e)
         {

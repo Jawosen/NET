@@ -7,4 +7,8 @@ public class PostDto
     public required string Body { get; set; }
     public DateTime Created { get; set; }
     public int UserId { get; set; }
+
+    // Only filled when requested with ?includeAuthor=true / ?includeComments=true
+    public UserDto? Author { get; set; }
+    public List<CommentDto> Comments { get; set; } = new();
 }

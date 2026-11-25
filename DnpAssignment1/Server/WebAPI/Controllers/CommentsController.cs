@@ -1,6 +1,7 @@
 using ApiContracts;
 using Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepositoryContracts;
 
 namespace WebAPI.Controllers;
@@ -25,12 +26,12 @@ public class CommentsController : ControllerBase
     {
         try
         {
-            if (!userRepo.GetMany().Any(u => u.Id == request.UserId))
+            if (!await userRepo.GetMany().AnyAsync(u => u.Id == request.UserId))
             {
                 return BadRequest($"User with ID '{request.UserId}' does not exist.");
             }
 
-            if (!postRepo.GetMany().Any(p => p.Id == request.PostId))
+            if (!await postRepo.GetMany().AnyAsync(p => p.Id == request.PostId))
             {
                 return BadRequest($"Post with ID '{request.PostId}' does not exist.");
             }
@@ -87,7 +88,7 @@ public class CommentsController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<CommentDto>> GetManyComments(
+    public async Task<ActionResult<IEnumerable<CommentDto>>> GetManyComments(
         [FromQuery] int? userId,
         [FromQuery] string? userName,
         [FromQuery] int? postId)
@@ -108,15 +109,22 @@ public class CommentsController : ControllerBase
 
             if (!string.IsNullOrWhiteSpace(userName))
             {
-                List<int> userIds = userRepo.GetMany()
-                    .Where(u => u.Username.Equals(userName, StringComparison.OrdinalIgnoreCase))
-                    .Select(u => u.Id)
-                    .ToList();
-
-                query = query.Where(c => userIds.Contains(c.UserId));
+                // Navigation property: EFC joins the Users table for us
+                query = query.Where(c => c.User.Username.ToLower() == userName.ToLower());
             }
 
-            return Ok(query.Select(ToDto).ToList());
+            List<CommentDto> comments = await query
+                .Select(c => new CommentDto
+                {
+                    Id = c.Id,
+                    Body = c.Body,
+                    Created = c.Created,
+                    UserId = c.UserId,
+                    PostId = c.PostId
+                })
+                .ToListAsync();
+
+            return Ok(comments);
         }
         catch (Exception e)
         {
